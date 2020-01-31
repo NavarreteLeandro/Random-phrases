@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Frases Random</string>
+
+
+    <!--Main Activity-->
+    <string name="text_input_main">Ingrese una frase</string>
+    <string name="guardar">Guardar</string>
+</resources>
