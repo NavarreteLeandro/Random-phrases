@@ -7,4 +7,8 @@
         android:title="Random"
         app:showAsAction="ifRoom"/>
 
+    <item android:id="@+id/action_add_phrase"
+        android:title="Agregar Frase"
+        app:showAsAction="ifRoom"/>
+
 </menu>

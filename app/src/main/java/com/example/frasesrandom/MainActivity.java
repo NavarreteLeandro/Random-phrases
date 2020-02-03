@@ -4,8 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,10 +23,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private EditText fraseIngresada;
-
-    private Button boton;
-
     private RecyclerView recyclerView;
 
     private AdapterFrases adapterFrases;
@@ -33,30 +32,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        boton = (Button) findViewById(R.id.button_id);
-
-        boton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                appendText();
-            }
-        });
-
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        addFrasesPredeterminadas();
         adapterFrases = new AdapterFrases(Frases.frases);
         recyclerView.setAdapter(adapterFrases);
 
     }
 
-    public void appendText() {
-
-        fraseIngresada = (EditText) findViewById(R.id.plain_text_input);
-        Frases.frases.add(fraseIngresada.getText().toString());
-
+    public void addFrasesPredeterminadas() {
+        Frases.frases.add("El que se fue a Sevilla, perdió su silla.");
+        Frases.frases.add("Cocodrilo que se duerme, es cartera.");
+        Frases.frases.add("A buen entendedor, pocas palabras.");
+        Frases.frases.add("Al que madruga, Dios lo ayuda");
+        Frases.frases.add("Billetera, mata galan");
+        Frases.frases.add("Mas vale pajaro en mano, que 100 volando");
+        Frases.frases.add("Con paciencia y saliva, el elefante se cojio a la hormiga");
+        Frases.frases.add("Somos pocos, nos conocemos muchos");
     }
 
     @Override
@@ -78,6 +75,29 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_random_frase) {
             Intent randromActivity = new Intent(this, destinityClass);
             startActivity((randromActivity));
+        }
+
+        if (id == R.id.action_add_phrase) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Agregue un frase con una coma de separación");
+
+            // Set up the input
+            final EditText input = new EditText(this);
+            // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+
+            // Set up the buttons
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String m_Text = input.getText().toString();
+                    Frases.frases.add(m_Text);
+                }
+            });
+
+            builder.show();
         }
 
         return super.onOptionsItemSelected(item);

@@ -7,6 +7,8 @@ public class Frases {
 
     public static List<String> frases = new ArrayList<String>();
 
+    public static List<String> frasesPredeterminadas = new ArrayList<>();
+
     public static String Mixer(List<String> frases) {
 
         String[] division;
@@ -27,6 +29,5 @@ public class Frases {
 
         return fraseRandom;
     }
-
 
 }
