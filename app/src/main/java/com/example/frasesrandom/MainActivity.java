@@ -1,6 +1,8 @@
 package com.example.frasesrandom;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,13 +14,10 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.example.frasesrandom.Data.Frase;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,34 +26,35 @@ public class MainActivity extends AppCompatActivity {
 
     private AdapterFrases adapterFrases;
 
+    private FrasesViewModel mFrasesViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mFrasesViewModel = new ViewModelProvider(this).get(FrasesViewModel.class);
+
+        mFrasesViewModel.getAllFrases().observe(this, new Observer<List<Frase>>() {
+
+            @Override
+            public void onChanged(List<Frase> frases) {
+                adapterFrases.setFrases(frases);
+            }
+        });
+
         recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+
+        adapterFrases = new AdapterFrases(this);
+        recyclerView.setAdapter(adapterFrases);
 
         LinearLayoutManager linearLayoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        addFrasesPredeterminadas();
-        adapterFrases = new AdapterFrases(Frases.frases);
-        recyclerView.setAdapter(adapterFrases);
-
     }
 
-    public void addFrasesPredeterminadas() {
-        Frases.frases.add("El que se fue a Sevilla, perdió su silla.");
-        Frases.frases.add("Cocodrilo que se duerme, es cartera.");
-        Frases.frases.add("A buen entendedor, pocas palabras.");
-        Frases.frases.add("Al que madruga, Dios lo ayuda");
-        Frases.frases.add("Billetera, mata galan");
-        Frases.frases.add("Mas vale pajaro en mano, que 100 volando");
-        Frases.frases.add("Con paciencia y saliva, el elefante se cojio a la hormiga");
-        Frases.frases.add("Somos pocos, nos conocemos muchos");
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        Class destinityClass = Randrom.class;
+        Class destinityClass = RandomActivity.class;
 
         if (id == R.id.action_random_frase) {
             Intent randromActivity = new Intent(this, destinityClass);
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     String m_Text = input.getText().toString();
-                    Frases.frases.add(m_Text);
+                    mFrasesViewModel.insert(new Frase(m_Text));
                 }
             });
 

@@ -1,5 +1,6 @@
 package com.example.frasesrandom;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,27 +9,27 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.frasesrandom.Data.Frase;
+
 import java.util.List;
 
 public class AdapterFrases extends RecyclerView.Adapter<AdapterFrases.ViewHolderFrases> {
 
-    List<String> frases;
+    private List<Frase> frases;
+    private final LayoutInflater mInflater;
 
-    public AdapterFrases(List<String> frases) {
-        this.frases = frases;
+    public AdapterFrases(Context context) {
+
+        mInflater = LayoutInflater.from(context);
     }
 
     public class ViewHolderFrases extends RecyclerView.ViewHolder {
 
-        TextView frase;
+        private final TextView frase;
 
         public ViewHolderFrases(@NonNull View itemView) {
             super(itemView);
             frase = (TextView) itemView.findViewById(R.id.item_frase);
-        }
-
-        public void asignarDatos(String frases) {
-            frase.setText(frases);
         }
     }
 
@@ -37,7 +38,7 @@ public class AdapterFrases extends RecyclerView.Adapter<AdapterFrases.ViewHolder
     public ViewHolderFrases onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_frase_list,null,false);
+                .inflate(R.layout.item_frase_list, null, false);
 
         return new ViewHolderFrases(view);
     }
@@ -45,12 +46,21 @@ public class AdapterFrases extends RecyclerView.Adapter<AdapterFrases.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolderFrases holder, int position) {
 
-        holder.asignarDatos(frases.get(position));
+        if (frases != null) {
+            Frase current = frases.get(position);
+            holder.frase.setText(current.getFrase());
+        }
+    }
 
+    void setFrases(List<Frase> frases) {
+        this.frases = frases;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return frases.size();
+        if (frases != null) {
+            return frases.size();
+        } else return 0;
     }
 }

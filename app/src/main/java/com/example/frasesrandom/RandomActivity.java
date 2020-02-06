@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
-public class Randrom extends AppCompatActivity {
+public class RandomActivity extends AppCompatActivity {
 
     private TextView fraseRandom;
 
@@ -17,7 +15,7 @@ public class Randrom extends AppCompatActivity {
         setContentView(R.layout.activity_randrom);
 
         fraseRandom = (TextView) findViewById(R.id.frase_aleatoria);
-        String fraseAleatoria = Frases.Mixer(Frases.frases);
+        String fraseAleatoria = FrasesViewModel.Mixer(FrasesViewModel.getAllFrases());
         fraseRandom.setText(fraseAleatoria);
     }
 
